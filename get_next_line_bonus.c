@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 16:50:35 by papereir          #+#    #+#             */
-/*   Updated: 2023/07/13 17:03:50 by papereir         ###   ########.fr       */
+/*   Created: 2023/07/13 17:12:02 by papereir          #+#    #+#             */
+/*   Updated: 2023/07/13 17:35:58 by papereir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_goodline(char *goodline)
 {
@@ -82,17 +82,12 @@ char	*ft_read(int fd, char *goodline, char *todo)
 	while (!ft_strchr(todo, '\n'))
 	{
 		r = read(fd, goodline, BUFFER_SIZE);
-		goodline[r] = '\0';
-		if (r == -1)
-		{
-			free(goodline);
-			return (NULL);
-		}
-		else if (r == 0)
+		if (r == 0 || r == -1)
 		{
 			free(goodline);
 			return (todo);
 		}
+		goodline[r] = '\0';
 		if (!todo)
 			todo = ft_strdup(goodline);
 		else
@@ -104,16 +99,16 @@ char	*ft_read(int fd, char *goodline, char *todo)
 
 char	*get_next_line(int fd)
 {
-	static char	*todo = NULL;
+	static char	*todo[OPEN_MAX];
 	char		*goodline;
 
-	if (BUFFER_SIZE <= 0 || fd < 0 || fd > 1000)
+	if (BUFFER_SIZE <= 0 || fd < 0 || fd > OPEN_MAX)
 		return (NULL);
 	goodline = malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!goodline)
 		return (NULL);
-	todo = ft_read(fd, goodline, todo);
-	goodline = ft_goodline(todo);
-	todo = ft_restline(todo);
+	todo[fd] = ft_read(fd, goodline, todo[fd]);
+	goodline = ft_goodline(todo[fd]);
+	todo[fd] = ft_restline(todo[fd]);
 	return (goodline);
 }

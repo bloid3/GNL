@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/11 18:24:26 by papereir          #+#    #+#             */
-/*   Updated: 2023/07/13 17:05:39 by papereir         ###   ########.fr       */
+/*   Created: 2023/07/13 17:36:39 by papereir          #+#    #+#             */
+/*   Updated: 2023/07/13 17:37:08 by papereir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*ft_strjoin(char const *s1, char const *s2)
 {
@@ -43,24 +43,24 @@ char	*ft_strjoin(char const *s1, char const *s2)
 char	*ft_strdup(const char *s1)
 {
 	char	*dst;
-	int		count;
+	int		cont;
 
-	count = 0;
+	cont = 0;
 	dst = malloc(ft_strlen(s1) + 1);
 	if (!dst)
 		return (0);
-	while (s1[count])
-	{
-		dst[count] = s1[count];
-		count++;
+	while (s1[cont])
+	{	
+		dst[cont] = s1[cont];
+		cont++;
 	}
-	dst[count] = '\0';
+	dst[cont] = '\0';
 	return (dst);
 }
 
 size_t	ft_strlen(const char *str)
 {
-	int		count;
+	int	count;
 
 	count = 0;
 	while (*str)
@@ -73,8 +73,8 @@ size_t	ft_strlen(const char *str)
 
 size_t	ft_strline(char *str)
 {
-	int		count;
-	int		i;
+	int	count;
+	int	i;
 
 	count = 0;
 	i = 0;
@@ -90,7 +90,7 @@ size_t	ft_strline(char *str)
 
 char	*ft_strchr(const char *str, int c)
 {
-	int		i;
+	int	i;
 
 	i = 0;
 	if (!str)
