@@ -3,25 +3,35 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/01/24 16:21:14 by papereir          #+#    #+#             */
-/*   Updated: 2023/07/13 17:01:58 by papereir         ###   ########.fr       */
+/*   Created: 2023/07/14 13:52:08 by marvin            #+#    #+#             */
+/*   Updated: 2023/07/14 13:52:08 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
-# include <unistd.h>
-# include <stdio.h>
-# include <fcntl.h>
-# include <stddef.h>
-# include <stdlib.h>
 
+# include <stdlib.h>
+# include <stdio.h>
+# include <unistd.h>
+# include <string.h>
+# include <strings.h>
+# include <stddef.h>
+# include <ctype.h>
+# include <fcntl.h>
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 42
+# endif
 char	*get_next_line(int fd);
-size_t	ft_strlen(const char *str);
-char	*ft_strdup(const char *s);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strchr(const char *str, int c);
-size_t	ft_strline(char *str);
+char	*read_and_save(int fd, char *save);
+char	*get_line(char *save);
+char	*ft_save(char *save);
+size_t	ft_strlen(char *s);
+char	*ft_strchr(char *str, int c);
+char	*ft_strjoin(char *s1, char *s2);
+void	*ft_calloc(size_t nmemb, size_t size);
+
 #endif
