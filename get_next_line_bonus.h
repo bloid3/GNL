@@ -26,7 +26,6 @@
 #  define BUFFER_SIZE 42
 # endif
 
-
 char	*get_next_line(int fd);
 char	*read_and_save(int fd, char *save);
 char	*get_line(char *save);
