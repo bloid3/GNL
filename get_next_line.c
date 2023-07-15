@@ -3,95 +3,82 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 13:54:02 by marvin            #+#    #+#             */
-/*   Updated: 2023/07/14 15:31:24 by marvin           ###   ########.fr       */
+/*   Updated: 2023/07/15 14:13:35 by papereir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+
+char	*ft_read_to_left_str(int fd, char *left_str)
+{
+	char	*buff;
+	int		rd_bytes;
+
+	buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buff)
+		return (NULL);
+	rd_bytes = 1;
+	while (!ft_strchr(left_str, '\n') && rd_bytes != 0)
+	{
+		rd_bytes = read(fd, buff, BUFFER_SIZE);
+		if (rd_bytes == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[rd_bytes] = '\0';
+		left_str = ft_strjoin(left_str, buff);
+	}
+	free(buff);
+	return (left_str);
+}
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*save;
+	static char	*left_str;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	save = read_and_save(fd, save);
-	if (!save)
+	left_str = ft_read_to_left_str(fd, left_str);
+	if (!left_str)
 		return (NULL);
-	line = get_line(save);
-	save = ft_save(save);
+	line = ft_get_line(left_str);
+	left_str = ft_new_left_str(left_str);
 	return (line);
 }
-
-char	*read_and_save(int fd, char *save)
-{
-	char	*buffer;
-	int		read_bytes;
-
-	if (ft_strchr(save, '\n'))
-		return (save);
-	buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	read_bytes = 1;
-	while (!ft_strchr(save, '\n') && read_bytes > 0)
-	{
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[read_bytes] = '\0';
-		save = ft_strjoin(save, buffer);
-	}
-	free(buffer);
-	return (save);
+/*
+void leaks() {
+	system("leaks a.out");
 }
 
-char	*get_line(char *save)
-{
-	int		i;
-	char	*line;
+int main() {
+	atexit(leaks);
+	int fd;
+    char *line;
 
-	i = 0;
-	if (!save[i])
-		return (NULL);
-	while (save[i] && save[i] != '\n')
-		i++;
-	line = ft_calloc((i + 2), sizeof(char));
-	i = 0;
-	while (save[i] && save[i] != '\n')
-	{
-		line[i] = save[i];
-		i++;
-	}
-	if (save[i] == '\n')
-		line[i] = '\n';
-	return (line);
+    fd = open("archivo.txt", O_RDONLY);
+    if (fd == -1)
+    {
+        perror("Error al abrir el archivo");
+        return 1;
+    }
+
+    line = get_next_line(fd);
+    while (line)
+    {
+        printf("%s\n", line);
+        free(line);
+        line = get_next_line(fd);
+    }
+
+    close(fd);
+    return 0;
 }
-
-char	*ft_save(char *save)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	while (save[i] && save[i] != '\n')
-		i++;
-	if (!save[i])
-	{
-		free(save);
-		return (NULL);
-	}
-	str = ft_calloc((ft_strlen(save) - i + 1), sizeof(char));
-	i++;
-	j = 0;
-	while (save[i])
-		str[j++] = save[i++];
-	free(save);
-	return (str);
-}
+*/

@@ -11,86 +11,99 @@
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#define NUM_FILES 3
+
+char	*ft_read_to_left_str(int fd, char *left_str)
+{
+	char	*buff;
+	int		rd_bytes;
+
+	buff = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	if (!buff)
+		return (NULL);
+	rd_bytes = 1;
+	while (!ft_strchr(left_str, '\n') && rd_bytes != 0)
+	{
+		rd_bytes = read(fd, buff, BUFFER_SIZE);
+		if (rd_bytes == -1)
+		{
+			free(buff);
+			return (NULL);
+		}
+		buff[rd_bytes] = '\0';
+		left_str = ft_strjoin(left_str, buff);
+	}
+	free(buff);
+	return (left_str);
+}
 
 char	*get_next_line(int fd)
 {
 	char		*line;
-	static char	*save[FOPEN_MAX];
+	static char	*left_str[4096];
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || fd > FOPEN_MAX)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	save[fd] = read_and_save(fd, save[fd]);
-	if (!save[fd])
+	left_str[fd] = ft_read_to_left_str(fd, left_str[fd]);
+	if (!left_str[fd])
 		return (NULL);
-	line = get_line(save[fd]);
-	save[fd] = ft_save(save[fd]);
+	line = ft_get_line(left_str[fd]);
+	left_str[fd] = ft_new_left_str(left_str[fd]);
 	return (line);
 }
-
-char	*read_and_save(int fd, char *save)
-{
-	char	*buffer;
-	int		read_bytes;
-
-	buffer = ft_calloc((BUFFER_SIZE + 1), sizeof(char));
-	read_bytes = 1;
-	while (!ft_strchr(save, '\n') && read_bytes > 0)
-	{
-		read_bytes = read(fd, buffer, BUFFER_SIZE);
-		if (read_bytes == -1)
-		{
-			free(buffer);
-			return (NULL);
-		}
-		buffer[read_bytes] = '\0';
-		save = ft_strjoin(save, buffer);
-	}
-	free(buffer);
-	return (save);
+/*
+void leaks() {
+	system("leaks a.out");
 }
 
-char	*get_line(char *save)
+int main()
 {
-	int		i;
-	char	*line;
+	atexit(leaks);
+    int fds[NUM_FILES];
+    char *lines[NUM_FILES];
 
-	i = 0;
-	if (!save[i])
-		return (NULL);
-	while (save[i] && save[i] != '\n')
-		i++;
-	line = ft_calloc((i + 2), sizeof(char));
-	i = 0;
-	while (save[i] && save[i] != '\n')
-	{
-		line[i] = save[i];
-		i++;
-	}
-	if (save[i] == '\n')
-		line[i] = '\n';
-	free(line);
-	return (line);
+    // Abrir archivos en modo de solo lectura
+    fds[0] = open("archivo1.txt", O_RDONLY);
+    fds[1] = open("archivo2.txt", O_RDONLY);
+    fds[2] = open("archivo3.txt", O_RDONLY);
+
+    if (fds[0] == -1 || fds[1] == -1 || fds[2] == -1)
+    {
+        perror("Error al abrir los archivos");
+        return 1;
+    }
+
+    int files_remaining = NUM_FILES;
+
+    // Leer líneas de los archivos hasta que se llegue al final o ocurra un error
+    while (files_remaining > 0)
+    {
+        for (int i = 0; i < NUM_FILES; i++)
+        {
+            if (fds[i] != -1 && !lines[i])
+            {
+                lines[i] = get_next_line(fds[i]);
+
+                if (!lines[i])
+                {
+                    close(fds[i]);
+                    fds[i] = -1;
+                    files_remaining--;
+                }
+            }
+
+            if (lines[i])
+            {
+                printf("Archivo %d: %s\n", i + 1, lines[i]);
+                free(lines[i]);
+                lines[i] = NULL;
+            }
+        }
+    }
+
+    return 0;
 }
-
-char	*ft_save(char *save)
-{
-	int		i;
-	int		j;
-	char	*str;
-
-	i = 0;
-	while (save[i] && save[i] != '\n')
-		i++;
-	if (!save[i])
-	{
-		free(save);
-		return (NULL);
-	}
-	str = ft_calloc((ft_strlen(save) - i + 1), sizeof(char));
-	i++;
-	j = 0;
-	while (save[i])
-		str[j++] = save[i++];
-	free(save);
-	return (str);
-}
+*/

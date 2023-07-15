@@ -14,25 +14,17 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # include <stdlib.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <string.h>
-# include <strings.h>
-# include <stddef.h>
-# include <ctype.h>
-# include <fcntl.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE 1000
 # endif
 
 char	*get_next_line(int fd);
-char	*read_and_save(int fd, char *save);
-char	*get_line(char *save);
-char	*ft_save(char *save);
+char	*ft_read_to_left_str(int fd, char *left_str);
+char	*ft_strchr(char *s, int c);
 size_t	ft_strlen(char *s);
-char	*ft_strchr(char *str, int c);
-char	*ft_strjoin(char *s1, char *s2);
-void	*ft_calloc(size_t nmemb, size_t size);
+char	*ft_strjoin(char *left_str, char *buff);
+char	*ft_get_line(char *left_str);
+char	*ft_new_left_str(char *left_str);
 
 #endif
