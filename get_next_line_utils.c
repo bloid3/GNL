@@ -6,7 +6,7 @@
 /*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 13:58:03 by marvin            #+#    #+#             */
-/*   Updated: 2023/07/15 14:06:03 by papereir         ###   ########.fr       */
+/*   Updated: 2023/07/15 16:34:57 by papereir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ char	*ft_new_left_str(char *left_str)
 		free(left_str);
 		return (NULL);
 	}
-	str = (char *)(malloc(sizeof(char) * (ft_strlen(left_str) - i + 1)));
+	str = (char *)(malloc(sizeof(char) * (ft_strlen(left_str) - i)));
 	if (!str)
 	{
 		free(left_str);

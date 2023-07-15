@@ -11,10 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
-#define NUM_FILES 3
 
 char	*ft_read_to_left_str(int fd, char *left_str)
 {
@@ -30,6 +26,8 @@ char	*ft_read_to_left_str(int fd, char *left_str)
 		rd_bytes = read(fd, buff, BUFFER_SIZE);
 		if (rd_bytes == -1)
 		{
+			free(left_str);
+			left_str = NULL;
 			free(buff);
 			return (NULL);
 		}
@@ -62,48 +60,48 @@ void leaks() {
 int main()
 {
 	atexit(leaks);
-    int fds[NUM_FILES];
-    char *lines[NUM_FILES];
+	int fds[NUM_FILES];
+	char *lines[NUM_FILES];
 
-    // Abrir archivos en modo de solo lectura
-    fds[0] = open("archivo1.txt", O_RDONLY);
-    fds[1] = open("archivo2.txt", O_RDONLY);
-    fds[2] = open("archivo3.txt", O_RDONLY);
+	// Abrir archivos en modo de solo lectura
+	fds[0] = open("archivo1.txt", O_RDONLY);
+	fds[1] = open("archivo2.txt", O_RDONLY);
+	fds[2] = open("archivo3.txt", O_RDONLY);
 
-    if (fds[0] == -1 || fds[1] == -1 || fds[2] == -1)
-    {
-        perror("Error al abrir los archivos");
-        return 1;
-    }
+	if (fds[0] == -1 || fds[1] == -1 || fds[2] == -1)
+	{
+		perror("Error al abrir los archivos");
+		return 1;
+	}
 
-    int files_remaining = NUM_FILES;
+	int files_remaining = NUM_FILES;
 
-    // Leer líneas de los archivos hasta que se llegue al final o ocurra un error
-    while (files_remaining > 0)
-    {
-        for (int i = 0; i < NUM_FILES; i++)
-        {
-            if (fds[i] != -1 && !lines[i])
-            {
-                lines[i] = get_next_line(fds[i]);
+	// Leer líneas de los archivos hasta que se llegue al final o ocurra un error
+	while (files_remaining > 0)
+	{
+		for (int i = 0; i < NUM_FILES; i++)
+		{
+			if (fds[i] != -1 && !lines[i])
+			{
+				lines[i] = get_next_line(fds[i]);
 
-                if (!lines[i])
-                {
-                    close(fds[i]);
-                    fds[i] = -1;
-                    files_remaining--;
-                }
-            }
+				if (!lines[i])
+				{
+					close(fds[i]);
+					fds[i] = -1;
+					files_remaining--;
+				}
+			}
 
-            if (lines[i])
-            {
-                printf("Archivo %d: %s\n", i + 1, lines[i]);
-                free(lines[i]);
-                lines[i] = NULL;
-            }
-        }
-    }
+			if (lines[i])
+			{
+				printf("Archivo %d: %s\n", i + 1, lines[i]);
+				free(lines[i]);
+				lines[i] = NULL;
+			}
+		}
+	}
 
-    return 0;
+	return 0;
 }
 */

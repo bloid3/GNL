@@ -6,14 +6,11 @@
 /*   By: papereir <papereir@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/14 13:54:02 by marvin            #+#    #+#             */
-/*   Updated: 2023/07/15 14:13:35 by papereir         ###   ########.fr       */
+/*   Updated: 2023/07/15 16:33:03 by papereir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <unistd.h>
-#include <stdio.h>
-#include <fcntl.h>
 
 char	*ft_read_to_left_str(int fd, char *left_str)
 {
@@ -29,6 +26,7 @@ char	*ft_read_to_left_str(int fd, char *left_str)
 		rd_bytes = read(fd, buff, BUFFER_SIZE);
 		if (rd_bytes == -1)
 		{
+			free(left_str);
 			free(buff);
 			return (NULL);
 		}
@@ -53,32 +51,31 @@ char	*get_next_line(int fd)
 	left_str = ft_new_left_str(left_str);
 	return (line);
 }
-/*
-void leaks() {
-	system("leaks a.out");
-}
 
-int main() {
-	atexit(leaks);
-	int fd;
-    char *line;
+// void leaks() {
+// 	system("leaks a.out");
+// }
 
-    fd = open("archivo.txt", O_RDONLY);
-    if (fd == -1)
-    {
-        perror("Error al abrir el archivo");
-        return 1;
-    }
+// int main() {
+// 	atexit(leaks);
+// 	int fd;
+//     char *line;
 
-    line = get_next_line(fd);
-    while (line)
-    {
-        printf("%s\n", line);
-        free(line);
-        line = get_next_line(fd);
-    }
+//     fd = open("archivo.txt", O_RDONLY);
+//     if (fd == -1)
+//     {
+//         perror("Error al abrir el archivo");
+//         return 1;
+//     }
 
-    close(fd);
-    return 0;
-}
-*/
+//     line = get_next_line(fd);
+//     while (line)
+//     {
+//         printf("%s\n", line);
+//         free(line);
+//         line = get_next_line(fd);
+//     }
+
+//     close(fd);
+//     return 0;
+// }
